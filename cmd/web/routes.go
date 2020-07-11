@@ -13,6 +13,7 @@ func (app *application) routes() http.Handler {
 	mux.Get("/all", http.HandlerFunc(app.allBooks))
 	mux.Get("/book/:id", http.HandlerFunc(app.getBook))
 	mux.Post("/addbook", http.HandlerFunc(app.addBook))
+	mux.Post("/user/signup", http.HandlerFunc(app.signupUser))
 
 	return mux
 }
