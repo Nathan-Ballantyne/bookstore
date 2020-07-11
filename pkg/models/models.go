@@ -41,6 +41,6 @@ type ListContent struct {
 }
 
 type ListType struct {
-	ID   int    `json:"id`
-	name string `json:"name"`
+	ID   int    `json:"id"`
+	Name string `json:"name"`
 }
