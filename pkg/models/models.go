@@ -34,9 +34,13 @@ type Book struct {
 	Rating      int    `json:"rating"`
 }
 
-type List struct {
-	ID     int    `json:"id"`
-	BookID int    `json:"book_id"`
-	UserID int    `json:"user_id"`
-	Type   string `json:"type"`
+type ListContent struct {
+	TypeID int `json:"type_id"`
+	BookID int `json:"book_id"`
+	UserID int `json:"user_id"`
+}
+
+type ListType struct {
+	ID   int    `json:"id`
+	name string `json:"name"`
 }
