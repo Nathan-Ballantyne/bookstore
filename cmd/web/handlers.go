@@ -21,14 +21,14 @@ func (app *application) allBooks(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("All books in the system"))
 }
 
-func (app *application) addBook(w http.ResponseWriter, r *http.Request) int {
+func (app *application) addBook(w http.ResponseWriter, r *http.Request) {
 	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 
 	// Parse the form data.
 	err := r.ParseForm()
 	if err != nil {
 		app.clientError(w, http.StatusBadRequest)
-		return 0
+		return
 	}
 	// Validate the form contents using the form helper we made earlier.
 	form := r.PostForm
@@ -37,7 +37,7 @@ func (app *application) addBook(w http.ResponseWriter, r *http.Request) int {
 	relYear, err := strconv.Atoi(form.Get("release_year"))
 	pageCount, err := strconv.Atoi(form.Get("page_count"))
 	rating, err := strconv.Atoi(form.Get("rating"))
-	id, err := app.books.Insert(form.Get("title"), form.Get("author"), form.Get("cover"),
+	_, err = app.books.Insert(form.Get("title"), form.Get("author"), form.Get("cover"),
 		form.Get("series"), form.Get("read_status"), relYear, pageCount, rating)
 
 	if err != nil {
@@ -46,9 +46,8 @@ func (app *application) addBook(w http.ResponseWriter, r *http.Request) int {
 		} else {
 			app.serverError(w, err)
 		}
-		return 0
+		return
 	}
-	return id
 }
 
 func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
