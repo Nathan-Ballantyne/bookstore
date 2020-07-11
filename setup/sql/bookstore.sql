@@ -58,6 +58,6 @@ INSERT INTO book (title, author, release_year, page_count, cover, series, read_s
 CREATE USER 'web'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON bookstore.* TO 'web'@'localhost';
 -- Important: Make sure to swap 'pass' with a password of your own choosing.
-ALTER USER 'web'@'localhost' IDENTIFIED BY '1045';
+ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
 
                 
