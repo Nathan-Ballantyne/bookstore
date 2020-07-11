@@ -15,28 +15,28 @@ var (
 )
 
 type User struct {
-	ID             int
-	Name           string
-	Email          string
-	HashedPassword []byte
-	Active         bool
+	ID             int    `json:"id"`
+	Name           string `json:"name"`
+	Email          string `json:"email"`
+	HashedPassword []byte `json:"hashed_password"`
+	Active         bool   `json:"active"`
 }
 
 type Book struct {
-	ID          int
-	Title       string
-	Author      string
-	ReleaseYear int
-	PageCount   int
-	Cover       string
-	Series      string
-	ReadStatus  string
-	Rating      int
+	ID          int    `json:"id"`
+	Title       string `json:"title"`
+	Author      string `json:"author"`
+	ReleaseYear int    `json:"release_year"`
+	PageCount   int    `json:"page_count"`
+	Cover       string `json:"cover"`
+	Series      string `json:"series"`
+	ReadStatus  string `json:"read_status"`
+	Rating      int    `json:"rating"`
 }
 
 type List struct {
-	ID     int
-	BookID int
-	UserID int
-	Type   string
+	ID     int    `json:"id"`
+	BookID int    `json:"book_id"`
+	UserID int    `json:"user_id"`
+	Type   string `json:"type"`
 }
