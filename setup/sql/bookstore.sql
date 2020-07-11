@@ -14,6 +14,7 @@ ALTER TABLE users ADD CONSTRAINT users_uc_email UNIQUE (email);
 
 CREATE TABLE book (
 id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+title VARCHAR(255) NOT NULL,
 author VARCHAR(255) NOT NULL,
 release_year INTEGER NOT NULL,
 page_count INTEGER NOT NULL,
@@ -33,8 +34,24 @@ type VARCHAR(255) NOT NULL
 -- Add an index on the type column.
 CREATE INDEX idx_bookstore_type ON list(type);
 
+-- DROP TABLE book;
 
+-- add values to tables 
+-- INSERT INTO users (name, email, hashed_password, active) VALUES
+                 --   ('John Smith','john.smith@email.com','hgsbmciwekuysyjizfzivnxiebzpyoryxjvdwvrdogvlmemvszzmeimkjuws',TRUE);
+                 
+-- add books 
+INSERT INTO book (title, author, release_year, page_count, cover, series, read_status, rating) VALUES 
+				('Patrick Rothfuss', 'The Name if the Wind', 2008, 672, 'N/A', 'Kingkiller Chronicle', 'read', 10),
+                ('Patrick Rothfuss', 'The Wise Man\'s Fear', 2012, 1008, 'N/A', 'Kingkiller Chronicle', 'read', 10),
+                ('Patrick Rothfuss', 'The Slow Regard of Silent Things', 2016, 176, 'N/A', 'Kingkiller Chronicle', 'read', 10),
+                ('Brandon Sanderson', 'The Way of Kings', 2010, 1258, 'N/A', 'Stormlight Archive', 'read', 8),
+                ('Brandon Sanderson', 'Words of Radiance', 2014, 1328, 'N/A', 'Stormlight Archive', 'read', 10),
+                ('Brandon Sanderson', 'Oathbringer', 2017, 1243, 'N/A', 'Stormlight Archive', 'read', 9);
+                
+CREATE USER 'web'@'localhost';
+GRANT SELECT, INSERT, UPDATE ON bookstore.* TO 'web'@'localhost';
+-- Important: Make sure to swap 'pass' with a password of your own choosing.
+ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
 
---add values to tables 
-INSERT INTO users (name, email, hashed_password, active) VALUES
-                    ('John Smith','john.smith@email.com','hgsbmciwekuysyjizfzivnxiebzpyoryxjvdwvrdogvlmemvszzmeimkjuws',TRUE);
+                
