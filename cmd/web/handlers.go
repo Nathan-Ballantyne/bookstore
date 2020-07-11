@@ -31,12 +31,13 @@ func (app *application) addBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Validate the form contents using the form helper we made earlier.
-	form := r.PostForm
+	form := forms.New(r.PostForm)
 	// Try to create a new user record in the database. If the email already exists
 	// add an error message to the form and re-display it.
 	relYear, err := strconv.Atoi(form.Get("release_year"))
 	pageCount, err := strconv.Atoi(form.Get("page_count"))
 	rating, err := strconv.Atoi(form.Get("rating"))
+
 	_, err = app.books.Insert(form.Get("title"), form.Get("author"), form.Get("cover"),
 		form.Get("series"), form.Get("read_status"), relYear, pageCount, rating)
 
@@ -127,6 +128,7 @@ func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
 	// If there are any errors, redisplay the signup form.
 	if !form.Valid() {
 		// return some json string
+		fmt.Print("error signing up user")
 		return
 	}
 
