@@ -37,10 +37,10 @@ type Book struct {
 type ListContent struct {
 	TypeID int `json:"type_id"`
 	BookID int `json:"book_id"`
-	UserID int `json:"user_id"`
 }
 
 type ListType struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID     int    `json:"id"`
+	UserID int    `json:"user_id"`
+	Name   string `json:"name"`
 }
