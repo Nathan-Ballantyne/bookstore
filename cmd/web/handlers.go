@@ -11,14 +11,17 @@ import (
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
+	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 	w.Write([]byte("Home handler"))
 }
 
 func (app *application) allBooks(w http.ResponseWriter, r *http.Request) {
+	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 	w.Write([]byte("All books in the system"))
 }
 
 func (app *application) addBook(w http.ResponseWriter, r *http.Request) {
+	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
 	w.Write([]byte("All books in the system"))
 }
 
@@ -28,6 +31,9 @@ func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "Book with id %d not found", id)
 		return
 	}
+
+	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
+
 	b, err := app.books.Get(id)
 
 	if err != nil {
