@@ -14,11 +14,12 @@ import (
 )
 
 type application struct {
-	errorLog *log.Logger
-	infoLog  *log.Logger
-	books    *mysql.BookModel
-	users    *mysql.UserModel
-	lists    *mysql.ListModel
+	errorLog    *log.Logger
+	infoLog     *log.Logger
+	books       *mysql.BookModel
+	users       *mysql.UserModel
+	listTypes   *mysql.ListTypeModel
+	listContent *mysql.ListContentModel
 }
 
 func main() {
@@ -37,11 +38,12 @@ func main() {
 	defer db.Close()
 
 	app := application{
-		errorLog: errorLog,
-		infoLog:  infoLog,
-		books:    &mysql.BookModel{DB: db},
-		users:    &mysql.UserModel{DB: db},
-		lists:    &mysql.ListModel{DB: db},
+		errorLog:    errorLog,
+		infoLog:     infoLog,
+		books:       &mysql.BookModel{DB: db},
+		users:       &mysql.UserModel{DB: db},
+		listTypes:   &mysql.ListTypeModel{DB: db},
+		listContent: &mysql.ListContentModel{DB: db},
 	}
 
 	srv := &http.Server{
