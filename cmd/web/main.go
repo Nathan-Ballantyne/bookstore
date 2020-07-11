@@ -1,39 +1,74 @@
 package main
 
 import (
-	"fmt"
+	"database/sql"
+	"flag"
+	"log"
 	"net/http"
-	"strconv"
+	"os"
+	"time"
 
-	"github.com/bmizerany/pat"
+	"github.com/Nathan-Ballantyne/bookstore/pkg/models/mysql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
+type application struct {
+	errorLog *log.Logger
+	infoLog  *log.Logger
+	books    *mysql.BookModel
+	users    *mysql.UserModel
+	lists    *mysql.ListModel
+}
+
 func main() {
-	mux := pat.New()
-	mux.Get("/", http.HandlerFunc(home))
-	mux.Get("/all", http.HandlerFunc(allBooks))
-	mux.Get("/book/:id", http.HandlerFunc(book))
-	mux.Post("/addbook", http.HandlerFunc(addBook))
-	http.ListenAndServe(":4000", mux)
-}
+	addr := flag.String("addr", ":4000", "HTTP network address")
+	dsn := flag.String("dsn", "web:1045@/bookstore?parseTime=true", "MySQL data source name")
+	flag.Parse()
 
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Home handler"))
-}
+	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
+	errorLog := log.New(os.Stderr, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
-func allBooks(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("All books in the system"))
-}
-
-func addBook(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("All books in the system"))
-}
-
-func book(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
-	if err != nil || id < 1 {
-		w.Write([]byte("Book with not found"))
-		return
+	db, err := openDB(*dsn)
+	if err != nil {
+		errorLog.Fatal(err)
 	}
-	fmt.Fprintf(w, "Book with id: %d", id)
+
+	defer db.Close()
+
+	app := application{
+		errorLog: errorLog,
+		infoLog:  infoLog,
+		books:    &mysql.BookModel{DB: db},
+		users:    &mysql.UserModel{DB: db},
+		lists:    &mysql.ListModel{DB: db},
+	}
+
+	srv := &http.Server{
+		Addr:     *addr,
+		ErrorLog: errorLog,
+		Handler:  app.routes(),
+		// Add Idle, Read and Write timeouts to the server.
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
+	infoLog.Printf("Starting server on %s", *addr)
+
+	err = srv.ListenAndServe()
+	errorLog.Fatal(err)
+}
+
+// The openDB() function wraps sql.Open() and returns a sql.DB connection pool
+// for a given DSN.
+func openDB(dsn string) (*sql.DB, error) {
+	db, err := sql.Open("mysql", dsn)
+	if err != nil {
+		return nil, err
+	}
+	if err = db.Ping(); err != nil {
+		return nil, err
+	}
+	return db, nil
 }
