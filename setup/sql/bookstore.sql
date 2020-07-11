@@ -24,11 +24,17 @@ read_status VARCHAR(255) NOT NULL,
 rating INTEGER NOT NULL
 );
 
-CREATE TABLE list (
-id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+CREATE TABLE list_content (
+type_id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
 book_id INTEGER NOT NULL,
-user_id INTEGER NOT NULL,
-type VARCHAR(255) NOT NULL
+user_id INTEGER NOT NULL
+);
+
+-- DROP TABLE list;
+
+CREATE TABLE list_type (
+id INTEGER NOT NULL PRIMARY KEY AUTO_INCREMENT,
+name VARCHAR(255) NOT NULL
 );
 
 -- Add an index on the type column.
@@ -52,6 +58,6 @@ INSERT INTO book (title, author, release_year, page_count, cover, series, read_s
 CREATE USER 'web'@'localhost';
 GRANT SELECT, INSERT, UPDATE ON bookstore.* TO 'web'@'localhost';
 -- Important: Make sure to swap 'pass' with a password of your own choosing.
-ALTER USER 'web'@'localhost' IDENTIFIED BY 'pass';
+ALTER USER 'web'@'localhost' IDENTIFIED BY '1045';
 
                 
