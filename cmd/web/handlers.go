@@ -1,28 +1,48 @@
 package main
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"github.com/Nathan-Ballantyne/bookstore/pkg/models"
 )
 
-func home(w http.ResponseWriter, r *http.Request) {
+func (app *application) home(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("Home handler"))
 }
 
-func allBooks(w http.ResponseWriter, r *http.Request) {
+func (app *application) allBooks(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("All books in the system"))
 }
 
-func addBook(w http.ResponseWriter, r *http.Request) {
+func (app *application) addBook(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("All books in the system"))
 }
 
-func book(w http.ResponseWriter, r *http.Request) {
+func (app *application) getBook(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get(":id"))
 	if err != nil || id < 1 {
-		w.Write([]byte("Book with not found"))
+		fmt.Fprintf(w, "Book with id %d not found", id)
 		return
 	}
-	fmt.Fprintf(w, "Book with id: %d", id)
+	b, err := app.books.Get(id)
+
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	bookJSON, err := json.Marshal(b)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Fprint(w, string(bookJSON))
 }
