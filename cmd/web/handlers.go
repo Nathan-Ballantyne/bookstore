@@ -17,8 +17,27 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) allBooks(w http.ResponseWriter, r *http.Request) {
+
 	app.infoLog.Printf("%s - %s %s %s", r.RemoteAddr, r.Proto, r.Method, r.URL.RequestURI())
-	w.Write([]byte("All books in the system"))
+
+	books, err := app.books.GetAll()
+
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			app.notFound(w)
+		} else {
+			app.serverError(w, err)
+		}
+		return
+	}
+
+	bookJSON, err := json.Marshal(books)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	w.Header().Set("Content-Type", "application/json")
+	fmt.Fprint(w, string(bookJSON))
 }
 
 func (app *application) addBook(w http.ResponseWriter, r *http.Request) {
