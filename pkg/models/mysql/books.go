@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"log"
 
 	"errors"
 
@@ -56,4 +57,40 @@ func (m *BookModel) Get(id int) (*models.Book, error) {
 		}
 	}
 	return b, nil
+}
+
+func (m *BookModel) GetAll() ([]models.Book, error) {
+	b := &models.Book{}
+	var books []models.Book
+
+	stmt := `SELECT id, 
+					title, 
+					author, 
+					release_year, 
+					page_count, 
+					cover, series, 
+					read_status, 
+					rating 
+			FROM book`
+	rows, err := m.DB.Query(stmt)
+	defer rows.Close()
+
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, models.ErrNoRecord
+		}
+		return nil, err
+	}
+
+	for rows.Next() {
+		err = rows.Scan(&b.ID, &b.Title, &b.Author, &b.ReleaseYear, &b.PageCount, &b.Cover, &b.Series, &b.ReadStatus, &b.Rating)
+		books = append(books, *b)
+		log.Println(b.ID, b.Title, b.Author, b.ReleaseYear, b.PageCount, b.Cover, b.Series, b.ReadStatus, b.Rating)
+	}
+
+	err = rows.Err()
+	if err != nil {
+		panic(err)
+	}
+	return books, nil
 }
