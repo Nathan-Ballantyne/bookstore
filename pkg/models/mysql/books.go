@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"database/sql"
-	"log"
 
 	"errors"
 
@@ -85,7 +84,7 @@ func (m *BookModel) GetAll() ([]models.Book, error) {
 	for rows.Next() {
 		err = rows.Scan(&b.ID, &b.Title, &b.Author, &b.ReleaseYear, &b.PageCount, &b.Cover, &b.Series, &b.ReadStatus, &b.Rating)
 		books = append(books, *b)
-		log.Println(b.ID, b.Title, b.Author, b.ReleaseYear, b.PageCount, b.Cover, b.Series, b.ReadStatus, b.Rating)
+		//log.Println(b.ID, b.Title, b.Author, b.ReleaseYear, b.PageCount, b.Cover, b.Series, b.ReadStatus, b.Rating)
 	}
 
 	err = rows.Err()
